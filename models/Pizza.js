@@ -1,23 +1,48 @@
 // import Schemea and model from mongoose
 const { Schema, model } = require('mongoose');
+// import dateFormat() function to format dates
+const dateFormat = require('../utils/dateFormat');
 
 const PizzaSchema = new Schema({
     pizzaName: {
         type: String
     },
     createdBy: {
-        type:String
+        type: String
     },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        // formate date using dataFormat() function
+        get: (createdAtVal) => dateFormat(createdAtVal)
     },
     size: {
         type: String,
         default: 'Large'
     },
-    toppings:[]
-});
+    toppings: [],
+    // pizza comments reference comment model
+    comments: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ]
+},
+    {
+        toJSON: {
+            virtuals: true,
+            getters: true
+        },
+        id: false
+    }
+
+);
+
+// get total count of comments and replies on retrieval
+PizzaSchema.virtual('commentCount').get(function() {
+    return this.comments.length;
+})
 
 // create the Pizza model using the PizzaSchema
 const Pizza = model("Pizza", PizzaSchema);
