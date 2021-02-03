@@ -1,4 +1,4 @@
-// import Schemea and model from mongoose
+// import Schema and model from mongoose
 const { Schema, model } = require('mongoose');
 // import dateFormat() function to format dates
 const dateFormat = require('../utils/dateFormat');
